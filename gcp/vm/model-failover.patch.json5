@@ -1,0 +1,38 @@
+// Multi-model Gemini stack — quota-driven (2026-05-26 operator AI Studio snapshot).
+// Primary: gemini-3.1-flash-lite (stable id, 9/500 RPD headroom).
+// Fallback: gemini-3.5-flash (10/20 RPD).
+// 2.5-flash and 2.5-flash-lite removed: both over Free-tier RPD (25/20 and 29/20).
+//
+// Requires:
+//   - models.providers.google.models[]      (fixes "model not found")
+//   - api: "google-generative-ai"           (fixes 3.5 routed via openai-responses + 401)
+//   - baseUrl: http://google-genai-proxy... (workaround for OpenClaw 2026.5.19
+//     baked-in alias that rewrites google/gemini-3.1-flash-lite -> ...-preview
+//     at runtime; proxy un-rewrites the URL before calling Google)
+//
+// Deploy order: ./vm/setup-google-genai-proxy.sh THEN ./vm/setup-model-stack.sh
+// See docs/MODEL_RECOVERY_PLAN.md, docs/GEMINI_RATE_LIMITS.md.
+{
+  models: {
+    providers: {
+      google: {
+        api: "google-generative-ai",
+        baseUrl: "http://google-genai-proxy:8788",
+      },
+    },
+  },
+  agents: {
+    defaults: {
+      model: {
+        primary: "google/gemini-3.1-flash-lite",
+        fallbacks: [
+          "google/gemini-3.5-flash",
+        ],
+      },
+      models: {
+        "google/gemini-3.1-flash-lite": {},
+        "google/gemini-3.5-flash": {},
+      },
+    },
+  },
+}

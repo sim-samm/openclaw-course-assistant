@@ -1,0 +1,25 @@
+// Replaces models.providers.google entirely. Drops retired preview entries and
+// 2.5* (over Free-tier RPD per 2026-05-26 AI Studio snapshot).
+//
+// baseUrl points at our local URL-rewrite proxy on the openclaw_default docker
+// network. Workaround for the OpenClaw 2026.5.19 baked-in alias map that
+// silently rewrites google/gemini-3.1-flash-lite -> ...-preview (retired 404)
+// inside the gateway, ahead of any config-layer override. The proxy rewrites
+// the URL back to the stable id before forwarding to Google.
+// Deploy proxy first: ./vm/setup-google-genai-proxy.sh
+//
+// See docs/MODEL_RECOVERY_PLAN.md, docs/GEMINI_RATE_LIMITS.md.
+{
+  models: {
+    providers: {
+      google: {
+        api: "google-generative-ai",
+        baseUrl: "http://google-genai-proxy:8788",
+        models: [
+          { id: "gemini-3.1-flash-lite", name: "Gemini 3.1 Flash Lite" },
+          { id: "gemini-3.5-flash", name: "Gemini 3.5 Flash" },
+        ],
+      },
+    },
+  },
+}

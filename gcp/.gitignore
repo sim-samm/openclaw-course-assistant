@@ -1,0 +1,7 @@
+# Local operator config (copy from phase0.env.example)
+phase0.env
+
+# Course slide binaries — regenerate locally; deploy to VM via setup-course-materials.sh
+vm/course-materials/*.pdf
+vm/course-materials/pdf-raw/
+vm/course-materials/pptx-source/

@@ -1,0 +1,19 @@
+// Remove retired / over-RPD models from agents.defaults.models allowlist.
+// `null` deletes the path in an OpenClaw config patch.
+//
+// - 3.1-flash-lite-preview: retired (404 NOT_FOUND).
+// - 2.5-flash, 2.5-flash-lite: over Free-tier RPD (operator snapshot 2026-05-26)
+//   so we drop them from the stack until midnight Pacific reset.
+//
+// See docs/MODEL_RECOVERY_PLAN.md.
+{
+  agents: {
+    defaults: {
+      models: {
+        "google/gemini-3.1-flash-lite-preview": null,
+        "google/gemini-2.5-flash": null,
+        "google/gemini-2.5-flash-lite": null,
+      },
+    },
+  },
+}
